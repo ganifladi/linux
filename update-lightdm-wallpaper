@@ -1,0 +1,89 @@
+#!/bin/bash
+
+## CHECK WINDOWMANAGER
+
+if ! [ "$1" = "xfce" ] && ! [ "$1" = "cinnamon" ] ; then
+
+  echo 'i3'
+  
+  ## monitor check to get the right image
+  LINES=0
+  if xrandr | grep 'HDMI1 connected' ; then
+    #echo '------- HDMI1 found'
+    LINES=3
+  else
+    #echo '------- HDMI1 not found'
+    LINES=13
+  fi
+
+  # Get the third last lines; only print the first of them; cut the first 6 characters,
+  DIR=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -c6-`
+  PATHTO=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -c6- | cut -d '/' -f -5`
+  FILE=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -d '/' -f 6-`
+  IMAGE=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -d '/' -f 6- | cut -d '.' -f 1`
+  
+else
+
+  if [ "$1" = "xfce" ] ; then
+
+    echo 'XFCE!'
+    TEMP=`xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP1/workspace0/last-image`
+    # reverse string; choose the first fiel; reverse again
+    FILE=`echo $TEMP | rev | cut -d '/' -f 1 | rev`
+
+  elif [ "$1" = "cinnamon" ] ; then
+
+    echo 'Cinnamon!'
+    TEMP=`gsettings get org.cinnamon.desktop.background picture-uri`
+    FILE=`echo $TEMP | rev | cut -d '/' -f 1 | cut -c2- | rev`
+
+  fi
+
+  IMAGE=`echo $FILE | rev | cut -d '.' -f 2 | rev`
+  DIR=`echo /usr/share/backgrounds/wallpapers/$FILE`
+  PATHTO='/usr/share/backgrounds/wallpapers'
+
+fi 
+
+echo 'DIR:    '$DIR
+echo 'PATHTO: '$PATHTO
+echo 'FILE:   '$FILE
+echo 'IMAGE:  '$IMAGE
+
+
+## check reference file
+if [ -f $PATHTO/.reference/$IMAGE ]
+then
+    ## file exists - break!
+    echo 'The Login wallpaper "'$IMAGE'" already exists!'
+    exit 0
+fi
+
+## clean up ref dir
+rm $PATHTO/.reference/*
+
+## save reference copy in reference dir
+touch $PATHTO/.reference/$IMAGE
+
+
+## save a work copy in /tmp
+cp $DIR /tmp
+cd /tmp
+
+
+## edit copy and save as new login.jpg with imagemagick ...
+convert $FILE -level -50%,100%,0.6 \
+        -filter Gaussian -resize 20% -define filter:sigma=2.5 -resize 500% \
+        -fill white -gravity center \
+        $IMAGE.jpg
+
+
+cp $IMAGE.jpg $PATHTO/login.jpg
+
+
+## clean up work copy and edited image
+rm $FILE
+rm $IMAGE.jpg
+
+
+exit 0
