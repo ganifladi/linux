@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ## CHECK WINDOWMANAGER
 
 if ! [ "$1" = "xfce" ] && ! [ "$1" = "cinnamon" ] ; then
@@ -11,44 +12,41 @@ if ! [ "$1" = "xfce" ] && ! [ "$1" = "cinnamon" ] ; then
 
   ## monitor check to get the right image
   if xrandr | grep 'HDMI1 connected' ; then
-    #echo 'HDMI1:  found'
     LINES=1
   else
-    #echo 'HDMI1:  not found'
-    ## count rows in file
-    LINES=`cat /tmp/nitro-bg | wc -l`
+    LINES=$(cat /tmp/nitro-bg | wc -l) #count rows
   fi
 
-  # Get the third last lines; only print the first of them; cut the first 6 characters,
-  DIR=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -c6-`
-  PATHTO=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -c6- | cut -d '/' -f -5`
-  FILE=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -d '/' -f 6-`
-  IMAGE=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -d '/' -f 6- | cut -d '.' -f 1`
-
+  ## Get lines depending on HDMI input; only print the first of them; cut the first 6 characters,
+  DIR=$(tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -c6-)
   rm /tmp/nitro-bg
   
 else
 
   if [ "$1" = "xfce" ] ; then
 
-    echo 'XFCE!'
-    TEMP=`xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP1/workspace0/last-image`
-    # reverse string; choose the first fiel; reverse again
-    FILE=`echo $TEMP | rev | cut -d '/' -f 1 | rev`
-
+    echo 'XFCE!'  
+    DIR=$(xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP1/workspace0/last-image)
+  
   elif [ "$1" = "cinnamon" ] ; then
 
     echo 'Cinnamon!'
-    TEMP=`gsettings get org.cinnamon.desktop.background picture-uri`
-    FILE=`echo $TEMP | rev | cut -d '/' -f 1 | cut -c2- | rev`
+    DIR=$(gsettings get org.cinnamon.desktop.background picture-uri | cut -c9- | rev | cut -c2- | rev)
 
   fi
-
-  IMAGE=`echo $FILE | rev | cut -d '.' -f 2 | rev`
-  DIR=`echo /usr/share/backgrounds/wallpapers/$FILE`
-  PATHTO='/usr/share/backgrounds/wallpapers'
-
 fi 
+
+
+## Count slashes in path
+SLASHES=$(grep -o "/" <<< "$DIR" | wc -l)
+SLASHES_PLUS_ONE=$(($SLASHES+1))
+
+PATHTO=$(echo $DIR | cut -d '/' -f -$SLASHES)
+
+## reverse string; choose the first fiel; reverse again
+FILE=$(echo $DIR | rev | cut -d '/' -f 1 | rev)
+IMAGE=$(echo $FILE | rev | cut -d '.' -f 2 | rev)
+
 
 echo 'DIR:    '$DIR
 echo 'PATHTO: '$PATHTO
@@ -57,18 +55,20 @@ echo 'IMAGE:  '$IMAGE
 
 
 ## check reference file
-if [ -f $PATHTO/.reference/$IMAGE ]
+if [ -f "$PATHTO/.my-lightdm-bg-reference/$IMAGE" ]
 then
     ## file exists - break!
     echo 'The Login wallpaper "'$IMAGE'" already exists!'
     exit 0
 fi
 
-## clean up ref dir
-rm $PATHTO/.reference/*
+## if there is non create reference folder inside wallpaper directory
+if [ ! -d "$PATHTO/.my-lightdm-bg-reference" ]; then
+  mkdir "$PATHTO/.my-lightdm-bg-reference"
+fi
 
 ## save reference copy in reference dir
-touch $PATHTO/.reference/$IMAGE
+touch $PATHTO/.my-lightdm-bg-reference/$IMAGE
 
 
 ## save a work copy in /tmp
