@@ -6,21 +6,26 @@ if ! [ "$1" = "xfce" ] && ! [ "$1" = "cinnamon" ] ; then
 
   echo 'i3'
   
+  ## collect all paths from nitrogen saved bgs
+  grep file .config/nitrogen/bg-saved.cfg > /tmp/nitro-bg
+
   ## monitor check to get the right image
-  LINES=0
   if xrandr | grep 'HDMI1 connected' ; then
-    #echo '------- HDMI1 found'
-    LINES=3
+    #echo 'HDMI1:  found'
+    LINES=1
   else
-    #echo '------- HDMI1 not found'
-    LINES=13
+    #echo 'HDMI1:  not found'
+    ## count rows in file
+    LINES=`cat /tmp/nitro-bg | wc -l`
   fi
 
   # Get the third last lines; only print the first of them; cut the first 6 characters,
-  DIR=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -c6-`
-  PATHTO=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -c6- | cut -d '/' -f -5`
-  FILE=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -d '/' -f 6-`
-  IMAGE=`tail -n $LINES $HOME/.config/nitrogen/bg-saved.cfg | head -n 1 | cut -d '/' -f 6- | cut -d '.' -f 1`
+  DIR=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -c6-`
+  PATHTO=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -c6- | cut -d '/' -f -5`
+  FILE=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -d '/' -f 6-`
+  IMAGE=`tail -n $LINES /tmp/nitro-bg | head -n 1 | cut -d '/' -f 6- | cut -d '.' -f 1`
+
+  rm /tmp/nitro-bg
   
 else
 
