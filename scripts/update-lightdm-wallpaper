@@ -1,0 +1,97 @@
+#!/bin/bash
+
+
+## CHECK WINDOWMANAGER
+
+if ! [ "$1" = "xfce" ] && ! [ "$1" = "cinnamon" ] ; then
+
+  echo 'i3'
+
+  ## collect all paths from nitrogen saved bgs
+  grep file .config/nitrogen/bg-saved.cfg > /tmp/nitro-bg
+
+  ## monitor check to get the right image
+  if xrandr | grep 'HDMI1 connected' ; then
+    LINES=1
+  else
+    LINES=$(cat "/tmp/nitro-bg" | wc -l) #count rows
+  fi
+
+  ## Get lines depending on HDMI input; only print the first of them; cut the first 6 characters,
+  DIR=$(tail -n "$LINES" "/tmp/nitro-bg" | head -n 1 | cut -c6-)
+  rm /tmp/nitro-bg
+
+else
+
+  if [ "$1" = "xfce" ] ; then
+
+    echo 'XFCE!'
+    DIR=$(xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP1/workspace0/last-image)
+
+  elif [ "$1" = "cinnamon" ] ; then
+
+    echo 'Cinnamon!'
+    DIR=$(gsettings get org.cinnamon.desktop.background picture-uri | cut -c9- | rev | cut -c2- | rev)
+
+  fi
+fi
+
+
+## Count slashes in path
+SLASHES=$(grep -o "/" <<< "$DIR" | wc -l)
+
+PATHTO=$(echo "$DIR" | cut -d '/' -f -"$SLASHES")
+
+## reverse string; choose the first fiel; reverse again
+FILE=$(echo "$DIR" | rev | cut -d '/' -f 1 | rev)
+IMAGE=$(echo "$FILE" | rev | cut -d '.' -f 2 | rev)
+
+
+echo 'DIR:    '"$DIR"
+echo 'PATHTO: '"$PATHTO"
+echo 'FILE:   '"$FILE"
+echo 'IMAGE:  '"$IMAGE"
+
+
+## check reference file
+if [ -f "$PATHTO/.my-lightdm-bg-reference/$IMAGE" ]
+then
+    ## file exists - break!
+    echo 'The Login wallpaper '"$IMAGE"' already exists!'
+    exit 0
+fi
+
+## if there is non create reference folder inside wallpaper directory
+if [ ! -d "$PATHTO/.my-lightdm-bg-reference" ]; then
+  echo 'reference folder not found. let me handle that for you. created.'
+  mkdir "$PATHTO/.my-lightdm-bg-reference"
+fi
+
+## clean up reference folder
+rm -r "$PATHTO"/.my-lightdm-bg-reference/*
+
+## save reference copy in reference dir
+touch "$PATHTO"/.my-lightdm-bg-reference/"$IMAGE"
+
+
+## save a work copy in /tmp
+cp "$DIR" /tmp
+cd /tmp
+
+
+## edit copy and save as new login.jpg with imagemagick ...
+convert "$FILE" -level -50%,100%,0.6 \
+        -filter Gaussian -resize 20% -define filter:sigma=2.5 -resize 500% \
+        -fill white -gravity center \
+        "$IMAGE".jpg
+
+
+cp "$IMAGE".jpg "$PATHTO"/login.jpg
+
+
+## clean up work copy and edited image
+rm -f "$FILE"
+rm -f "$IMAGE".jpg
+
+
+exit 0

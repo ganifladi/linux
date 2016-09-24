@@ -1,0 +1,44 @@
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: false
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+
+
+! ------------------------------------------------------------------------------
+! ROFI Color theme
+! ------------------------------------------------------------------------------
+rofi.color-enabled: true
+rofi.color-window: #303030, #303030, #303030
+rofi.color-normal: #303030, #e5e5e5, #303030, #4fc0e8, #303030
+rofi.color-active: #303030, #4fc0e8, #303030, #4fc0e8, #e5e5e5
+rofi.color-urgent: #303030, #dc322f, #303030, #dc322f, #fdf6e3
+
+
+! ------------------------------------------------------------------------------
+! URXVT
+! ------------------------------------------------------------------------------
+
+! General settings
+URxvt.scrollBar: none
+URxvt.internalBorder: 30
+URxvt.transparent:   true
+URxvt.tintColor:     white
+URxvt.shading:       20
+
+! Set urxvt as login shell
+URxvt*loginShell: true
+
+! Font settings
+URxvt.font: xft:monaco:size=12
+URxvt.letterSpace: -1
+
+! Colors
+!#include ".Xresources.d/BASE16-GoogleDark"
+!#include ".Xresources.d/BASE16-Gentoo"
+#include ".Xresources.d/BASE16-Ocean"
+!#include ".Xresources.d/BASE16-Eightees"
+!#include ".Xresources.d/BASE16-Ashes"
+!#include ".Xresources.d/BASE16-Twilight"
