@@ -17,5 +17,5 @@ conky.config = {
 }
 
 conky.text = [[  
-  ${if_match "${exec pidof vlc}" > "0"}  ${execi 4 audioinfo vlc -a | cut -c 9-} - ${execi 4 audioinfo vlc -t | cut -c 8-}${endif}      ${time %H:%M}  
+  ${if_match "${exec pidof vlc}" > "0"}  ${execi 4 audioinfo vlc -a | cut -c 9-} - ${execi 4 audioinfo vlc -t | cut -c 8-}${endif}     ${time %H:%M}  
 ]]
