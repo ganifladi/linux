@@ -1,0 +1,44 @@
+conky.config = {
+
+    background = false,
+    update_interval = 0.5,
+
+    double_buffer = true,
+    no_buffers = true,
+
+    text_buffer_size = 2048.0,
+
+    -- Window specifications
+    own_window = true,
+    own_window_class = 'conky',
+    own_window_type = 'desktop',
+    own_window_transparent = false,
+    own_window_colour = '2b303b',
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+
+    minimum_height = 2,
+    minimum_width = 1920,
+    maximum_width = 1920,
+
+    border_inner_margin = 0,
+    border_outer_margin = 0,
+    border_width = 0,
+
+    alignment = 'bottom_left',
+    gap_x = 0,
+    gap_y = 39,
+
+    -- Graphics settings
+    draw_shades = false,
+    draw_outline = false,
+    draw_borders = false,
+    draw_graph_borders = false,
+
+    -- Load LUA Graphic
+    lua_load = '~/.conky/conky_draw.lua',
+    lua_draw_hook_pre = 'main'
+
+};
+
+conky.text = [[
+]]
