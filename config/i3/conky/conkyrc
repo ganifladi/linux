@@ -1,0 +1,26 @@
+conky.config = {
+
+  -- don't print on desktop
+  out_to_x = false,
+  own_window = false,
+
+  -- show output in console
+  out_to_console = true,
+
+  -- work in background
+  background = false,
+
+  -- update interval
+  update_interval = 1.0,
+  total_run_times = 0
+
+}
+
+conky.text = [[
+${if_match "${exec pidof vlc}" > "0"}  ${execi 1 audioinfo vlc -a | cut -c 9-} - ${execi 1 audioinfo vlc -t | cut -c 8-}   ${execi 1 amixer get Master -M | grep "Front Left: Playback" | cut -f2 -d '[' | cut -c-2}  ${endif}\
+${if_match "${exec pidof cmus}" > "0"}  ${execi 1 cmus-remote -Q 2>/dev/null | grep artist | cut -d " " -f 3-} - ${execi 1 cmus-remote -Q 2>/dev/null | grep title | cut -d " " -f 3-}   ${execi 1 amixer get Master -M | grep "Front Left: Playback" | cut -f2 -d '[' | cut -c-2}  ${endif}\
+${if_match "$battery_percent" > "0"}\
+ ${battery_percent}%  \
+${endif}\
+${time %a %d %b, %H:%M}  
+]]

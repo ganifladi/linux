@@ -1,6 +1,6 @@
 conky.config = {
 
-    background = false,
+    background = true,
     update_interval = 0.5,
 
     double_buffer = true,
@@ -26,7 +26,7 @@ conky.config = {
 
     alignment = 'bottom_left',
     gap_x = 0,
-    gap_y = 39,
+    gap_y = 2,
 
     -- Graphics settings
     draw_shades = false,

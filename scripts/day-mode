@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# --DAY-MODE
+
+HOME='/home/rene'
+NITRO=$HOME'/.config/nitrogen/bg-saved.cfg'
+GTK2=$HOME'/.gtkrc-2.0'
+GTK3=$HOME'/.config/gtk-3.0/settings.ini'
+XRES=$HOME'/.Xresources'
+I3CONF=$HOME'/.config/i3/config'
+
+# WALLPAPER
+nitrogen --set-zoom-fill $HOME/.wallpapers/wallhaven-21150.jpg
+sed -i 's^file=.*^file=/home/rene/\.wallpapers/wallhaven\-21150\.jpg^' $NITRO
+
+# GTK2 THEME
+sed -i 's^gtk-theme-name=.*^gtk-theme-name="Breath"^' $GTK2
+
+# GTK3 THEME
+sed -i 's^gtk-theme-name=.*^gtk-theme-name=Breath^' $GTK3
+
+# XRESOURCES
+sed -i 's^rofi.color-window.*^rofi.color-window: #eff1f5, #eff1f5, #eff1f5^' $XRES
+sed -i 's^rofi.color-normal.*^rofi.color-normal: #eff1f5, #343d46, #eff1f5, #eff1f5, #bf616a, #3377cc^' $XRES
+#sed -i 's^\!\+URxvt\*depth.*^URxvt\*depth: 32^' $XRES
+#sed -i 's^\!\+URxvt\*background.*^URxvt\*background: rgba:0000\/0000\/0200\/c800^' $XRES
+xrdb ~/.Xresources
+
+# i3 CONFIG
+sed -i 's^set \$border.*^set \$border     \#eff1f5CC^' $I3CONF
+sed -i 's^set \$background.*^set \$background \#eff1f5CC^' $I3CONF
+sed -i 's^set \$text.*^set \$text       \#343d46FF^' $I3CONF
+sed -i 's^set \$active.*^set \$active     \#bf616aFF^' $I3CONF
+sed -i 's^set \$inactive.*^set \$inactive   \#a7adbaFF^' $I3CONF
+sed -i 's^client.focused.*^client.focused          \$text       \$text       \$background $background $background^' $I3CONF
+sed -i 's^client.focused_inactive*^client.focused_inactive \$inactive   \$inactive   \$text       $background $background^' $I3CONF
+sed -i 's^focused_workspace.*^focused_workspace  \$border  \$background   \$active^' $I3CONF 
+i3-msg restart

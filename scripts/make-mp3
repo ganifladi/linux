@@ -1,0 +1,19 @@
+#!/bin/bash
+
+for FILE
+  do
+
+    ## Does the file already exist?
+    if [ ! -e $FILE ]; then
+      continue
+    fi
+
+    ## Prepare new filename
+    TONAME=""$( echo $FILE | sed -e 's/\.[^.]*$//')
+
+    ## Convert file to mp3
+    ffmpeg -i "${FILE}" -acodec libmp3lame -ab 192k -y "${TONAME}".mp3
+
+  done
+
+exit 0

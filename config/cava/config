@@ -53,7 +53,7 @@ bar_width = 3
 
 method = pulse
 ; source = NULL
-source = 1
+source = auto 
 
 
 
@@ -73,8 +73,11 @@ source = 1
 
 # supported colors are: red, green, yellow, magenta, cyan, white, blue, black.
 background = black
-foreground = yellow
+foreground = red
 
+gradient = 0
+gradient_color_1 = '#0099ff'
+gradient_color_2 = '#ff3399'
 
 [smoothing]
 
