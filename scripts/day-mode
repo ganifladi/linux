@@ -6,7 +6,7 @@ HOME='/home/rene'
 NITRO=$HOME'/.config/nitrogen/bg-saved.cfg'
 GTK2=$HOME'/.gtkrc-2.0'
 GTK3=$HOME'/.config/gtk-3.0/settings.ini'
-XRES=$HOME'/.Xresources'
+ROFI=$HOME'/.config/rofi/config'
 I3CONF=$HOME'/.config/i3/config'
 
 # WALLPAPER
@@ -19,12 +19,9 @@ sed -i 's^gtk-theme-name=.*^gtk-theme-name="Breath"^' $GTK2
 # GTK3 THEME
 sed -i 's^gtk-theme-name=.*^gtk-theme-name=Breath^' $GTK3
 
-# XRESOURCES
-sed -i 's^rofi.color-window.*^rofi.color-window: #eff1f5, #eff1f5, #eff1f5^' $XRES
-sed -i 's^rofi.color-normal.*^rofi.color-normal: #eff1f5, #343d46, #eff1f5, #eff1f5, #bf616a, #3377cc^' $XRES
-#sed -i 's^\!\+URxvt\*depth.*^URxvt\*depth: 32^' $XRES
-#sed -i 's^\!\+URxvt\*background.*^URxvt\*background: rgba:0000\/0000\/0200\/c800^' $XRES
-xrdb ~/.Xresources
+# ROFI
+sed -i 's^rofi.color-window.*^rofi.color-window: #eff1f5, #eff1f5, #eff1f5^' $ROFI
+sed -i 's^rofi.color-normal.*^rofi.color-normal: #eff1f5, #343d46, #eff1f5, #eff1f5, #bf616a, #3377cc^' $ROFI
 
 # i3 CONFIG
 sed -i 's^set \$border.*^set \$border     \#eff1f5CC^' $I3CONF
@@ -33,6 +30,7 @@ sed -i 's^set \$text.*^set \$text       \#343d46FF^' $I3CONF
 sed -i 's^set \$active.*^set \$active     \#bf616aFF^' $I3CONF
 sed -i 's^set \$inactive.*^set \$inactive   \#a7adbaFF^' $I3CONF
 sed -i 's^client.focused.*^client.focused          \$text       \$text       \$background $background $background^' $I3CONF
-sed -i 's^client.focused_inactive*^client.focused_inactive \$inactive   \$inactive   \$text       $background $background^' $I3CONF
-sed -i 's^focused_workspace.*^focused_workspace  \$border  \$background   \$active^' $I3CONF 
+sed -i 's^client.focused_inactive.*^client.focused_inactive \$inactive   \$inactive   \$text       $background $background^' $I3CONF
+sed -i 's^focused_workspace.*^focused_workspace  \$border  \$background   \$active^' $I3CONF
+sed -i 's^compton -b.*^compton -b --config ~/.config/compton.day.conf^' $I3CONF
 i3-msg restart
