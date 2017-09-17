@@ -11,26 +11,25 @@
 ;=====================================================
 
 [colors]
-background = ${xrdb:color0:#FF242a34}
-;background = 00ffffff
-background-alt = ${xrdb:color0:#FF242a34}
-;background-alt = 00ffffff
-foreground = ${xrdb:color7:#FFa7adba}
+;background = ${xrdb:color0:#222}
+background = #882b303b
+background-alt = #882b303b
+;foreground = ${xrdb:color7:#222}
+foreground = #a7adba
 foreground-alt = #979daa
-primary = ${xrdb:color4:#FFbf616a}
+primary = #bf616a
 secondary = #00aaff
-alert = ${xrdb:color1}
+alert = #00ffaa
 battery-charging = #00aaff
 battery-discharging = #ffaa00
 battery-full = #00ffaa
 
 [bar/top]
-monitor = ${env:MONITOR:eDP1}
-bottom = true
+;monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 42
-offset-x = 0
-offset-y = 0
+height = 40
+offset-x = 0%
+offset-y = -1%
 ;radius = 6.0
 ;fixed-center = false
 
@@ -43,24 +42,36 @@ foreground = ${colors.foreground}
 underline-size = 2
 underline-color = ${colors.foreground}
 
-;border-size = 20
-;border-size = 10
-border-size = 0
-border-bottom-size = 0
+;border-size = 4
 ;border-color = #00000000
 
 padding-left = 0
-;padding-right = 2
-padding-right = 0
+padding-right = 1
 module-margin-left = 0
-module-margin-right = 2
+module-margin-right = 0
 
 font-0 = Monaco:pixelsize=12;2
 font-1 = FontAwesome:size=12;2
 
 modules-left = i3
 modules-center = 
-modules-right = volume mpv cmus battery wlan date
+modules-right = battery date
+
+;tray-position = right
+;tray-padding = 2
+;tray-background = ${colors.background}
+;tray-transparent = true
+
+;wm-restack = bspwm
+;wm-restack = i3
+
+;override-redirect = true
+
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
 
 [module/xwindow]
 type = internal/xwindow
@@ -71,17 +82,15 @@ label-padding = 2
 type = internal/bspwm
 
 label-focused = %index%
-label-focused-background = ${colors.foreground-alt}
-label-focused-foreground = ${colors.background-alt}
-label-focused-underline= ${colors.foreground-alt}
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
 label-focused-padding = 2
 
 label-occupied = %index%
 label-occupied-padding = 2
 
 label-urgent = %index%!
-label-urgent-background = ${colors.background-alt}
-label-urgent-foreground = ${colors.alert}
+label-urgent-background = ${colors.alert}
 label-urgent-padding = 2
 
 label-empty = %index%
@@ -99,14 +108,13 @@ strip-wsnumbers = true
 ; Only show workspaces on the same output as the bar
 ;pin-workspaces = true
 
-label-mode-padding = 0
+label-mode-padding = 2
 label-mode-foreground = #000
 label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
 label-focused = %name%
 label-focused-background = ${module/bspwm.label-focused-background}
-label-focused-foreground = ${module/bspwm.label-focused-foreground}
 label-focused-underline = ${module/bspwm.label-focused-underline}
 label-focused-padding = ${module/bspwm.label-focused-padding}
 
@@ -123,7 +131,6 @@ label-visible-padding = ${self.label-focused-padding}
 ; urgent = Workspace with urgency hint set
 label-urgent = %name%
 label-urgent-background = ${module/bspwm.label-urgent-background}
-label-urgent-foreground = ${module/bspwm.label-urgent-foreground}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
 
 ws-icon-0 = 1;
@@ -153,22 +160,22 @@ type = internal/network
 interface = wlp3s0
 interval = 3.0
 
-format-connected = <label-connected>
-;format-connected-underline = #9f78e1
-;label-connected = %essid%
-label-connected = %local_ip%
+format-connected = <ramp-signal> <label-connected>
+format-connected-underline = #9f78e1
+label-connected = %essid%
 
-format-disconnected = <label-disconnected>
+format-disconnected =
+;format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
-label-disconnected = no network
+;label-disconnected = %ifname% disconnected
 ;label-disconnected-foreground = ${colors.foreground-alt}
 
-;ramp-signal-0 = 
-;ramp-signal-1 = 
-;ramp-signal-2 = 
-;ramp-signal-3 = 
-;ramp-signal-4 = 
-;ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/date]
 type = internal/date
@@ -177,23 +184,21 @@ interval = 1.0
 date = " %a %d %b,"
 date-alt =
 
-time = "  %H:%M  "
+time = %H:%M
 time-alt = %H:%M
 
 ;format-prefix = 
 ;format-prefix-foreground = ${colors.foreground-alt}
-format-background = ${colors.foreground}
-format-foreground = ${colors.background}
+;format-background = ${colors.background-alt}
 ;format-underline = #0a6cf5
-;format-padding = 2
+format-padding = 2
 
-;label = %date% %time%
-label = %time%
+label = %date% %time%
 
 [module/volume]
 type = internal/volume
 
-format-volume = <ramp-volume>
+format-volume = <ramp-volume><label-volume>
 format-voulme-padding = 0
 label-volume = %percentage%%
 label-volume-foreground = ${root.foreground}
@@ -204,12 +209,10 @@ format-muted-foreground = ${colors.foreground-alt}
 format-muted-padding = 0
 label-muted = "mute"
 
-ramp-volume-0 = 
+ramp-volume-0 = 
 ramp-volume-1 = 
 ramp-volume-2 = 
 ramp-headphones-0 = 
-ramp-headphones-1 = 
-ramp-headphones-2 = 
 
 [module/battery]
 type = internal/battery
@@ -268,39 +271,6 @@ label = %percentage%
 ramp-0 = 
 ramp-1 = 
 ramp-2 = 
-
-[module/redshift]
-type = custom/script
-interval = 5
-
-exec = ~/.config/polybar/redshift.sh
-click-left = ~/.local/bin/red.sh
-
-[module/cmus]
-type = custom/script
-
-exec = sh ~/.config/polybar/cmus.sh
-exec-if = pgrep -x cmus
-interval = 1
-
-click-left = cmus-remote --pause
-click-right = cmus-remote --stop
-
-[module/mpv]
-type = custom/script
-
-exec = sh ~/.config/polybar/mpv.sh
-exec-if = pgrep -x mpv
-interval = 1
-
-format = <label>
-label = %output%
-
-[module/bluetooth]
-type = custom/script
-interval = 5
-
-exec = ~/.config/polybar/bluetooth.sh
 
 [module/powermenu]
 type = custom/menu

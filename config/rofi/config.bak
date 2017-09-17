@@ -1,0 +1,20 @@
+! "Enabled modi" Set from: Default
+rofi.modi: run
+
+! "Window width" Set from: Default
+rofi.width: 1920
+
+! "Padding" Set from: Default
+rofi.padding: 500
+
+! "Number of lines" Set from: Default
+rofi.lines: 3
+
+! "Font to use" Set from: Default
+rofi.font: Monaco 32
+
+! Color states     'bg',    'fg',    'bgalt', 'hlbg',  'hlfg'
+rofi.color-normal: #242a34, #b7bdca, #242a34, #242a34, #bf616a, #3377cc
+!                  'background', 'border', 'separator'
+rofi.color-window: #242a34, #242a34, #242a34
+
