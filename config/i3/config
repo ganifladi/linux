@@ -5,11 +5,16 @@
 # i3 config file (v4)
 
 # colors
-set $border     #2b303bCC
-set $background #2b303bCC
-set $text       #a7adbaFF
-set $active     #bf616aFF
-set $inactive   #a7adbaFF
+set_from_resource $border       color0 #bf616aFF
+set_from_resource $background   color0 #2b303bCC
+set_from_resource $text         color7 #c0c5ceFF
+set_from_resource $active       color4 #bf616aFF
+set_from_resource $inactive     color7 #c0c5ceFF
+
+set $bar-height  40
+set $border-width 0
+
+#for_window [class="^.*"] floating enable
 
 # font for window titles and bar
 font pango:DejaVu Sans Mono 8
@@ -86,14 +91,23 @@ bindsym $mod+d focus child
 popup_during_fullscreen smart
 
 # customize workspace names
-set $WS1 "1:    Terminal "
-set $WS2 "2:    Files "
-set $WS3 "3:    Webbrowser "
-set $WS4 "4:    Music "
-set $WS5 "5:    Office "
-set $WS6 "6:    Graphic "
+#set $WS1 "1:    Terminal "
+#set $WS2 "2:    Files "
+#set $WS3 "3:    Webbrowser "
+#set $WS4 "4:    Music "
+#set $WS5 "5:    Office "
+#set $WS6 "6:    Graphic "
+#set $WS7 "7:    "
+#set $WS8 "8:    Chat "
+#set $WS9 "9:    "
+set $WS1 "1:    "
+set $WS2 "2:    "
+set $WS3 "3:    "
+set $WS4 "4:    "
+set $WS5 "5:    "
+set $WS6 "6:    "
 set $WS7 "7:    "
-set $WS8 "8:    Chat "
+set $WS8 "8:    "
 set $WS9 "9:    "
 
 # switch to workspace
@@ -127,8 +141,9 @@ exec --no-startup-id fcitx &
 exec --no-startup-id nm-applet &
 exec --no-startup-id redshift &
 exec --no-startup-id ~/.local/bin/hdmi-check
+exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
 exec --no-startup-id compton -b --config ~/.config/compton.night.conf
-#exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # assign classes
 assign [class="Thunar"] $WS2
@@ -154,11 +169,11 @@ bindsym $mod+Shift+e exec i3-msg exit
 # We first set the titlebar font size to a large size to get a good padding amount.
 # We then use pango markup to force i3 to print with the desired font.
 # This gives us large titlebars with a small font. :P
-font pango:Monaco 28
-for_window [class=".*"] title_format "<span font='Monaco 10'>  %title</span>"
+font pango:Monaco 24
+for_window [class=".*"] title_format "<span font='Monaco 10'>  > %title</span>"
 
 # BORDER
-new_window pixel 0
+new_window pixel $border-width
 
 # mousepad glitch fix
 hide_edge_borders both
@@ -167,12 +182,12 @@ hide_edge_borders both
 bindsym $mod+shift+b [class="^.*"] border toggle
 
 # toggle border
-set $mode_border Toggle border: (1) off (2) small (3) big
+set $mode_border Toggle border: (1)OFF (2)NOR (3)BIG
 bindsym $mod+b mode "$mode_border"
 
 mode "$mode_border" {
     bindsym 1 mode "default", border pixel 0
-    bindsym 2 mode "default", border pixel 3
+    bindsym 2 mode "default", border pixel 5
     bindsym 3 mode "default", border pixel 10
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -180,6 +195,7 @@ mode "$mode_border" {
 
 # FLOATING WINDOWS
 #for_window [class="^.*"] floating enable
+for_window [class="^python*"] floating enable
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="task_dialog"] floating enable
 for_window [title="Preferences$"] floating enable
@@ -197,17 +213,17 @@ mode "$mode_tile" {
 
 # GAPS
 #smart_gaps on
-gaps inner 30
-gaps outer 10
+gaps inner 20
+gaps outer 0
 
 # Toggle Gaps
-set $mode_gaps Toggle gaps: (1) off (2) small (3) big
+set $mode_gaps Toggle gaps: (1)OFF (2)NORMAL (3)HUGE  
 bindsym $mod+n mode "$mode_gaps"
 
 mode "$mode_gaps" {
     bindsym 1 mode "default", gaps inner all set 0, gaps outer all set 0
-    bindsym 2 mode "default", gaps inner all set 30, gaps outer all set 10
-    bindsym 3 mode "default", gaps inner all set 40, gaps outer all set 20
+    bindsym 2 mode "default", gaps inner all set 20, gaps outer all set 0
+    bindsym 3 mode "default", gaps inner all set 60, gaps outer all set 30
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
@@ -232,19 +248,18 @@ mode "$mode_resize" {
 }
 
 # window colors         Border      Background  Text        Indicator   Child_Border
-client.focused          $inactive   $inactive   $background $background $background
-client.focused_inactive $inactive   $inactive   $background $background $background
-client.unfocused        $inactive   $inactive   $background $background $background
-client.urgent           $background $background $text       $background $background
-client.placeholder      $background $background $text       $background $background
+client.focused          $border     $background $text       $border     $border
+client.unfocused        $background $background $background $background $background
+client.urgent           $background $background $background $background $background
+client.placeholder      $background $background $background $background $background
 client.background       $background
 
 # start i3bar to display a workspace bar
 bar {
   i3bar_command i3bar
-  mode dock
+  mode invisible
   position bottom
-  height 40
+  height $bar-height
   tray_padding 8
   tray_output none
   font pango:Monaco 12
@@ -267,7 +282,7 @@ bar {
 bindsym --release $mod+m bar mode toggle
 
 # Audio
-bindsym --release XF86AudioRaiseVolume exec --no-startup-id amixer -c 1 sset 'Master' 5%+ && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
+bindsym --release XF86AudioRaiseVolume exec --no-startup-id amixer -c 1 sset 'Master' 5%+ && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga #&& notify-send "$(amixer -c 1 sget 'Master' | cut -d ']' -sf 2 | cut -c 2-)"
 bindsym --release XF86AudioLowerVolume exec --no-startup-id amixer -c 1 sset 'Master' 5%- && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
 bindsym --release Shift+XF86AudioRaiseVolume exec --no-startup-id  amixer -c 1 sset 'Master' 15%+ && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
 bindsym --release Shift+XF86AudioLowerVolume exec --no-startup-id  amixer -c 1 sset 'Master' 15%- && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
@@ -298,4 +313,5 @@ bindsym --release XF86Display exec --no-startup-id /home/rene/.local/bin/hdmi-ch
 bindsym $mod+Shift+x exec ~/.local/bin/i3lock-blur
 
 # screenshot
-bindsym --release Print exec --no-startup-id scrot /run/media/rene/HDD/tmp/
+bindsym --release Print exec --no-startup-id scrot /tmp/`date +%Y%m%d_%H%M%S`.png && exec notify-send 'SCROT' 'Screenshot taken (/tmp)'
+
