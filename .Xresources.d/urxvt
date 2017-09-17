@@ -1,0 +1,20 @@
+! General settings
+URxvt.scrollBar: none
+URxvt.internalBorder: 30
+URxvt.tintColor: white
+URxvt.inheritPixmap: false
+
+! Transparency - real
+!URxvt*depth: 32
+!URxvt*background: rgba:2200/2700/3200/f555
+
+! Transparency - fake
+!URxvt.transparent: true
+!URxvt.shading: 20
+
+! Set urxvt as login shell
+URxvt*loginShell: true
+
+! Font settings
+URxvt.font: xft:monaco:size=12
+URxvt.letterSpace: -1
