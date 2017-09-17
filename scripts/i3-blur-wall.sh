@@ -1,15 +1,26 @@
 #!/bin/bash
 
-BLURBG=/tmp/screen.png
-
 CURRWORKSPACE=$(wmctrl -d | grep '*' | cut -d ' ' -f1)
 #echo "Current workspace: $CURRWORKSPACE"
 
 WINDOWS=$(wmctrl -l | cut -d ' ' -f3 | grep $CURRWORKSPACE | wc -l)
 #echo "Open windows on workspace$CURRWORKSPACE: $WINDOWS"
 
-WALLPAPER=$(tail -n3 ~/.config/nitrogen/bg-saved.cfg | head -n1 | cut -c6-)
-#echo "Current wallpaper path: $WALLPAPER"
+CURRWALLPAPER=$(tail -n1 ~/.fehbg | cut -d "'" -f2)
+#echo "Wallpaper path: $WALLPAPER"
+
+ORIGINAL=/tmp/original-bg
+echo $CURRWALLPAPER > $ORIGINAL
+
+COPYBG=/tmp/copied-bg
+cp $(cat $ORIGINAL) $COPYBG
+
+BLURBG=/tmp/blured-bg
+
+
+function blurify {
+    convert $1 -blur 24,12 $2
+}
 
 function transition {
 
@@ -27,25 +38,28 @@ function transition {
     feh --bg-fill $NEW
 }
 
+
+$(blurify $COPYBG $BLURBG)
+
 while true; do
 
     CURRWORKSPACE=$(wmctrl -d | grep '*' | cut -d ' ' -f1)
     WINDOWS=$(wmctrl -l | cut -d ' ' -f3 | grep $CURRWORKSPACE | wc -l)
-    WALLPAPER=$(tail -n3 ~/.config/nitrogen/bg-saved.cfg | head -n1 | cut -c6-)
+    CURRWALLPAPER=$(tail -n1 ~/.fehbg | cut -d "'" -f2)
 
-    if (( $WINDOWS > 0 )) || (( $(pidof rofi) > 0 )); then
-        if ! [ -f $BLURBG ]; then
-            #ffmpeg -i $WALLPAPER -i ~/.local/bin/alphapixel.png -filter_complex "boxblur=7:2,overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2" -vframes 1 $BLURBG -loglevel quiet
-            convert $WALLPAPER -blur 24,12 $BLURBG
+    if [[ $WINDOWS > 0 ]] || [[ $(pidof rofi) > 0 ]]; then
+        if [ "$CURRWALLPAPER" != "$BLURBG" ]; then
+            if [ "$CURRWALLPAPER" != "$(cat $ORIGINAL)" ]; then
+                echo $CURRWALLPAPER > $ORIGINAL
+                cp $(cat $ORIGINAL) $COPYBG
+                $(blurify $COPYBG $BLURBG)
+            fi
+            feh --bg-fill $BLURBG
         fi
-        #$(transition $WALLPAPER $BLURBG)
-        feh --bg-fill $BLURBG
     else
-        if [ -f $BLURBG]; then
-            rm $BLURBG
+        if [ "$CURRWALLPAPER" != "$(cat $ORIGINAL)" ]; then
+            feh --bg-fill $(cat $ORIGINAL)
         fi
-        #$(transition $BLURBG $WALLPAPER)
-        feh --bg-fill $WALLPAPER
     fi
 
     sleep 0.5
