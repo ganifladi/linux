@@ -7,7 +7,7 @@ WINDOWS=$(wmctrl -l | cut -d ' ' -f3 | grep $CURRWORKSPACE | wc -l)
 #echo "Open windows on workspace$CURRWORKSPACE: $WINDOWS"
 
 CURRWALLPAPER=$(tail -n1 ~/.fehbg | cut -d "'" -f2)
-#echo "Wallpaper path: $WALLPAPER"
+#echo "Wallpaper path: $CURRWALLPAPER"
 
 ORIGINAL=/tmp/original-bg
 echo $CURRWALLPAPER > $ORIGINAL
@@ -22,24 +22,51 @@ function blurify {
     convert $1 -blur 24,12 $2
 }
 
-function transition {
+function transinit {
 
-    # Found on "https://unix.stackexchange.com/questions/382887/wallpaper-slideshow-with-transition-effects"
-    # Can anybody think about another solution to fade between blurry/clear wallpaper?!
+    local i="0"
 
-    local OLD=$1
-    local NEW=$2
-    local TRANS=/tmp/tansition.png
+    if ! [ -d /tmp/transition-bg ]; then
+        mkdir /tmp/transition-bg
+    fi
 
-    convert $OLD -fill black -colorize 50% $TRANS
-    feh --bg-fill $TRANS
-    convert $NEW -fill black -colorize 50$ $TRANS
-    feh --bg-fill $TRANS
-    feh --bg-fill $NEW
+    while [ $i -lt "10" ]; do
+        A=$(echo "($i + 1) * 2.4" | bc -l)
+        B=$(echo "($i + 1) * 1.2" | bc -l)
+        convert $COPYBG -blur $A,$B /tmp/transition-bg/trans-$i
+        echo $i
+        i=$[$i+1]
+    done
 }
 
+function transition {
 
-$(blurify $COPYBG $BLURBG)
+    local j="0"
+
+    while [ $j -lt "10" ]; do
+        feh --bg-fill /tmp/transition-bg/trans-$j
+        echo $j
+        j=$[$j+1]
+        sleep 0.01
+    done
+}
+
+function transition_rev {
+
+    local j="9"
+
+    while [ $j -ge "0" ]; do
+        feh --bg-fill /tmp/transition-bg/trans-$j
+        echo $j
+        j=$[$j-1]
+        sleep 0.01
+    done
+
+    feh --bg-fill $(cat $ORIGINAL)
+}
+
+#$(blurify $COPYBG $BLURBG)
+transinit
 
 while true; do
 
@@ -48,17 +75,22 @@ while true; do
     CURRWALLPAPER=$(tail -n1 ~/.fehbg | cut -d "'" -f2)
 
     if [[ $WINDOWS > 0 ]] || [[ $(pidof rofi) > 0 ]]; then
-        if [ "$CURRWALLPAPER" != "$BLURBG" ]; then
+#        if [ "$CURRWALLPAPER" != "$BLURBG" ]; then
+        if [ "$CURRWALLPAPER" != "/tmp/transition-bg/trans-9" ]; then
             if [ "$CURRWALLPAPER" != "$(cat $ORIGINAL)" ]; then
                 echo $CURRWALLPAPER > $ORIGINAL
                 cp $(cat $ORIGINAL) $COPYBG
-                $(blurify $COPYBG $BLURBG)
+                echo $(cat $ORIGINAL)
+                #$(blurify $COPYBG $BLURBG)
+                transinit
             fi
-            feh --bg-fill $BLURBG
+            #feh --bg-fill $BLURBG
+            transition
         fi
     else
         if [ "$CURRWALLPAPER" != "$(cat $ORIGINAL)" ]; then
-            feh --bg-fill $(cat $ORIGINAL)
+            #feh --bg-fill $(cat $ORIGINAL)
+            transition_rev
         fi
     fi
 
