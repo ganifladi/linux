@@ -1,8 +1,10 @@
 ! Colors
-#include ".Xresources.d/colors-base16-ocean"
+!#include ".Xresources.d/colors-base16-ocean"
 !#include ".Xresources.d/colors-palendrome"
 !#include ".Xresources.d/colors-one-dark"
 !#include ".Xresources.d/colors-breeze-dark"
+#include ".Xresources.d/colors-eighties"
+!#include ".Xresources.d/colors-tomorrow-night"
 
 ! Font Settings
 #include ".Xresources.d/fonts"
