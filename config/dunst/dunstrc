@@ -113,7 +113,7 @@
     padding = 16
 
     # horizontal padding
-    horizontal_padding = 12
+    horizontal_padding = 18
 
     # Define a color for the separator.
     # possible values are:
@@ -136,6 +136,9 @@
 
     # Align icons left/right/off
     icon_position = left
+
+    # Scale larger icons down to this size, set to 0 to disable
+    max_icon_size = 32
 
     # Paths to default icons.
     icon_folders = /usr/share/icons/breeze-dark/status/16/:/usr/share/icons/breeze-dark/devices/16/

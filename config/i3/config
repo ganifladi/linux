@@ -7,7 +7,7 @@
 # colors
 set_from_resource $border       color0 #bf616aFF
 set_from_resource $background   color0 #2b303bCC
-set_from_resource $text         color7 #c0c5ceFF
+set_from_resource $text         color8 #c0c5ceFF
 set_from_resource $active       color4 #bf616aFF
 set_from_resource $inactive     color7 #c0c5ceFF
 
@@ -100,15 +100,16 @@ popup_during_fullscreen smart
 #set $WS7 "7:    "
 #set $WS8 "8:    Chat "
 #set $WS9 "9:    "
-set $WS1 "1:    "
-set $WS2 "2:    "
-set $WS3 "3:    "
-set $WS4 "4:    "
-set $WS5 "5:    "
-set $WS6 "6:    "
-set $WS7 "7:    "
-set $WS8 "8:    "
-set $WS9 "9:    "
+
+set $WS1 "1:    "
+set $WS2 "2:    "
+set $WS3 "3:    "
+set $WS4 "4:    "
+set $WS5 "5:    "
+set $WS6 "6:    "
+set $WS7 "7:    "
+set $WS8 "8:    "
+set $WS9 "9:    "
 
 # switch to workspace
 bindsym $mod+1 workspace $WS1
@@ -136,13 +137,15 @@ bindsym $mod+Shift+9 move container to workspace $WS9; workspace $WS9
 # startup applications
 exec --no-startup-id xset s off -dpms &
 exec --no-startup-id xset b 0 0 0 &
-exec --no-startup-id nitrogen --restore &
+#exec --no-startup-id nitrogen --restore &
+exec --no-startup-id ~/.fehbg &
+exec --no-startup-id ~/.local/bin/blurme &
 exec --no-startup-id fcitx &
 exec --no-startup-id nm-applet &
 exec --no-startup-id redshift &
 exec --no-startup-id ~/.local/bin/hdmi-check
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-exec --no-startup-id compton -b --config ~/.config/compton.night.conf
+exec --no-startup-id compton -b --config ~/.config/compton.conf
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # assign classes
@@ -196,6 +199,7 @@ mode "$mode_border" {
 # FLOATING WINDOWS
 #for_window [class="^.*"] floating enable
 for_window [class="^python*"] floating enable
+for_window [class="^nexus*"] floating enable
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="task_dialog"] floating enable
 for_window [title="Preferences$"] floating enable
@@ -213,8 +217,8 @@ mode "$mode_tile" {
 
 # GAPS
 #smart_gaps on
-gaps inner 20
-gaps outer 0
+gaps inner 60
+gaps outer 30
 
 # Toggle Gaps
 set $mode_gaps Toggle gaps: (1)OFF (2)NORMAL (3)HUGE  
@@ -282,14 +286,9 @@ bar {
 bindsym --release $mod+m bar mode toggle
 
 # Audio
-bindsym --release XF86AudioRaiseVolume exec --no-startup-id amixer -c 1 sset 'Master' 5%+ && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga #&& notify-send "$(amixer -c 1 sget 'Master' | cut -d ']' -sf 2 | cut -c 2-)"
-bindsym --release XF86AudioLowerVolume exec --no-startup-id amixer -c 1 sset 'Master' 5%- && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
-bindsym --release Shift+XF86AudioRaiseVolume exec --no-startup-id  amixer -c 1 sset 'Master' 15%+ && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
-bindsym --release Shift+XF86AudioLowerVolume exec --no-startup-id  amixer -c 1 sset 'Master' 15%- && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
-bindsym --release XF86AudioMute exec --no-startup-id amixer sset 'Master' toggle
-bindsym --release $mod+F6 exec --no-startup-id amixer -c 1 sset 'Master' 5%+ && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
-bindsym --release $mod+F5 exec --no-startup-id amixer -c 1 sset 'Master' 5%- && paplay /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga
-bindsym --release $mod+F3 exec --no-startup-id amixer sset 'Master' toggle
+bindsym --release XF86AudioRaiseVolume exec --no-startup-id ~/.local/bin/volume.sh up
+bindsym --release XF86AudioLowerVolume exec --no-startup-id ~/.local/bin/volume.sh down
+bindsym --release XF86AudioMute exec --no-startup-id ~/.local/bin/volume.sh mute
 
 # sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 2
@@ -315,3 +314,20 @@ bindsym $mod+Shift+x exec ~/.local/bin/i3lock-blur
 # screenshot
 bindsym --release Print exec --no-startup-id scrot /tmp/`date +%Y%m%d_%H%M%S`.png && exec notify-send 'SCROT' 'Screenshot taken (/tmp)'
 
+
+## Plasma Integration
+# Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everythiing)
+
+exec --no-startup-id wmctrl -c Plasma
+for_window [title="Desktop — Plasma"] kill; floating enable; border none
+
+## Avoid tiling popups, dropdown windows from plasma
+# for the first time, manually resize them, i3 will remember the setting for floating windows
+for_window [class="plasmashell"] floating enable;
+for_window [class="Plasma"] floating enable; border none
+for_window [title="plasma-desktop"] floating enable; border none
+for_window [title="win7"] floating enable; border none
+for_window [class="krunner"] floating enable; border none
+for_window [class="Kmix"] floating enable; border none
+for_window [class="Klipper"] floating enable; border none
+for_window [class="Plasmoidviewer"] floating enable; border none
