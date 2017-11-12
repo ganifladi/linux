@@ -1,0 +1,106 @@
+/*AGENT_SHEET*/
+/*@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); */
+
+@import url("./classic/userChrome.css");
+
+/* Aris overrides ================================================================ */
+/* from /classic/css/buttons/custom_icon_colors.css
+/*orange*/
+#open-file-button,
+#home-button
+{
+  fill: black !important;
+}
+/* put Windows Classic part from tabs_below_navigation_toolbar.css here */
+#nav-bar:not(:-moz-lwtheme),
+#PersonalToolbar:not(:-moz-lwtheme),
+#main-window:not([tabsintitlebar])  #TabsToolbar:not(:-moz-lwtheme) {
+  border-left:  unset !important;
+  border-right:  unset !important;
+  background: unset !important;
+}
+
+#main-window:not([tabsintitlebar]) #toolbar-menubar:not(:-moz-lwtheme) {
+  background: unset !important;
+  box-shadow: unset !important;
+  border-bottom: unset !important;
+}
+
+#main-window:not([tabsintitlebar]):not(:-moz-lwtheme) #navigator-toolbox,
+#main-window:not([tabsintitlebar]):not(:-moz-lwtheme) #nav-bar,
+#main-window:not([tabsintitlebar]):not(:-moz-lwtheme) #navigator-toolbox::before,
+#main-window:not([tabsintitlebar]):not(:-moz-lwtheme) #nav-bar::before,
+#main-window:not([tabsintitlebar]):not(:-moz-lwtheme) #navigator-toolbox::after,
+#main-window:not([tabsintitlebar]):not(:-moz-lwtheme) #nav-bar::after {
+  background: unset !important;
+  box-shadow: unset !important;
+  border: unset !important;
+  border-image: unset !important;
+}
+
+#main-window:not([tabsintitlebar]) toolbar:not(#TabsToolbar):not(#toolbar-menubar):not(#nav-bar):not(:-moz-lwtheme) {
+  background: unset !important;
+}
+
+/* general_toolbar_colors.css override */
+/* findbar part */
+#main-window:not([style*='--lwt-header-image:url("resource:///chrome/browser/content/browser/defaultthemes/compact.header.png");']) :-moz-any(.browserContainer,#viewSource) :-moz-any(findbar,#FindToolbar) {
+  background: linear-gradient(#D4D0C8,#D4D0C8) !important;
+  border: 1px solid rgba(0,0,0,.5) !important;
+}
+/**/
+ 
+/* end of Aris overrides ============================================================ */
+ 
+/*
+tooltip {
+  max-width: 500px !important;
+  width: 500px !important;
+  height: auto !important;
+  border-color: #ff0000 !important;
+  -moz-appearance: none !important;
+}
+*/
+ 
+/* Ability to scroll in Fx57 */
+/*
+#PopupAutoCompleteRichResult { max-height: 340px !important; }
+#PopupAutoCompleteRichResult .autocomplete-richlistbox > scrollbox {
+  overflow-y: auto !important; 
+  padding-right: 3px !important;
+  margin-top: -4px;
+  margin-bottom: -4px; 
+}
+#PopupAutoCompleteRichResult .autocomplete-richlistbox {
+  padding-right: 0 !important;
+}
+*/
+ 
+/* Change color of selected tab and make title bold */
+tab [selected]  {
+/*    background-color: #EDEBE8 !important; */
+/*    color: white important;  */
+    font-weight: bold !important;
+}
+
+ 
+/*** Page Bookmarked / Edit This Bookmark Tweaks ***/
+/* Folder list box taller */
+#editBMPanel_folderTree {
+  height: 300px !important;
+  min-height: 300px !important;
+} 
+ 
+/*
+ * Remove "Send Page to Device", "Send Link to Device", 
+ * "Send Tab to Device" from context menu.
+ *
+ * Contributor(s): PilzAdam
+ * https://github.com/Timvde/UserChrome-Tweaks/blob/master/context-menu/remove-send-to-device.css
+ */
+ 
+#context-sendpagetodevice, #context-sep-sendpagetodevice,
+#context-sendlinktodevice, #context-sep-sendlinktodevice,
+#context_sendTabToDevice, #context_sendTabToDevice_separator {
+  display: none !important;
+}

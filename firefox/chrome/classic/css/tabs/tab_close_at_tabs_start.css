@@ -1,0 +1,13 @@
+/*AGENT_SHEET*/
+
+/* Firefox 57+ userChrome.css tweaks ****************************************************/
+/* code mostly taken from 'Classic Theme Restorer' & 'Classic Toolbar Buttons' add-ons **/
+/* by Aris (aris-addons@gmx.net)*********************************************************/
+/* Github: https://github.com/aris-t2/customcssforfx ************************************/
+/****************************************************************************************/
+
+#TabsToolbar #tabbrowser-tabs .tabbrowser-tab:not([pinned]) .tab-close-button {
+  -moz-box-ordinal-group: 0 !important;
+  -moz-margin-start: -4px !important;
+  -moz-margin-end: 12px !important;
+}
