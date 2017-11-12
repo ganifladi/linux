@@ -41,7 +41,7 @@ bindsym $mod+Return exec i3-sensible-terminal -e fish
 bindsym $mod+Shift+q kill
 
 # start a program launcher
-bindsym $mod+space exec --no-startup-id rofi -show run
+bindsym $mod+space exec --no-startup-id rofi -show combi
 
 # change focus
 bindsym $mod+$left  focus left
@@ -104,7 +104,7 @@ popup_during_fullscreen smart
 set $WS1 "1:    "
 set $WS2 "2:    "
 set $WS3 "3:    "
-set $WS4 "4:    "
+set $WS4 "4:    "
 set $WS5 "5:    "
 set $WS6 "6:    "
 set $WS7 "7:    "
@@ -226,7 +226,7 @@ bindsym $mod+n mode "$mode_gaps"
 
 mode "$mode_gaps" {
     bindsym 1 mode "default", gaps inner all set 0, gaps outer all set 0
-    bindsym 2 mode "default", gaps inner all set 20, gaps outer all set 0
+    bindsym 2 mode "default", gaps inner all set 30, gaps outer all set 20
     bindsym 3 mode "default", gaps inner all set 60, gaps outer all set 30
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -300,9 +300,10 @@ bindsym Shift+XF86MonBrightnessDown exec xbacklight -dec 15
 bindsym --release $mod+ctrl+r exec ~/.local/bin/red.sh
 
 # vlc
-bindsym --release $mod+Down exec --no-startup-id audioinfo vlc --action playpause
-bindsym --release $mod+Left exec --no-startup-id audioinfo vlc --action prev
-bindsym --release $mod+Right exec --no-startup-id audioinfo vlc --action next
+bindsym --release Mod4+Down exec --no-startup-id audioinfo vlc --action playpause && cmus-remote -u
+bindsym --release Mod4+Left exec --no-startup-id audioinfo vlc --action prev && cmus-remote -r && ~/.local/bin/cmus-notify.sh -Q
+bindsym --release Mod4+Right exec --no-startup-id audioinfo vlc --action next && cmus-remote -n && ~/.local/bin/cmus-notify.sh -Q
+bindsym --release Mod4+Up exec --no-startup-id cmus-remote -s
 
 # monitor
 bindsym --release $mod+p exec --no-startup-id /home/rene/.local/bin/hdmi-check
