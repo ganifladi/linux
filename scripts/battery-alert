@@ -26,7 +26,7 @@ if [ $(cat /sys/class/power_supply/AC/online) = "0" ] && \
    [ $(cat /sys/class/power_supply/BAT0/charge_now) \< "505000" ]; then
         # Display Notification
         if [ $DISPLAY ]; then dunstify -u critical \
-        -i /home/rene/.icons/status/battery-low.svg \
+        -i ~/.icons/status/battery-low.svg \
         -r 2789 \
         "Battery Critically Low" "Plug in to AC or Suspend immediately"; fi
         # Play Alert Sound
@@ -37,7 +37,7 @@ elif [ $(cat /sys/class/power_supply/AC/online) = "1" ] && \
     [ $(cat /sys/class/power_supply/BAT0/voltage_now) \> "12905000" ]; then
         # Display Notification
         if [ $DISPLAY ]; then dunstify -u normal \
-        -i /home/rene/.icons/status/battery-full.svg \
+        -i ~/.icons/status/battery-full.svg \
         -r 2789 \
         -t 7000 "Battery Almost Full" "Please unplug charger, or remove battery"; fi
         # Play Alert Sound
