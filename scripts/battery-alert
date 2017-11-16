@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# battery.service goes in '~/.config/systemd/user/'
+# -------------------------------------------------
+# [Unit]
+# Description=Send alerts on battery events
+#
+# [Service]
+# Type=simple
+# ExecStart=/bin/bash /home/rene/.local/bin/battery-alert
+# Environment="DISPLAY=:0" "XAUTHORITY=/home/rene/.Xauthority"
+# Restart=always
+# RestartSec=10
+#
+# [Install]
+# WantedBy=default.target
+# -------------------------------------------------
+
+# Afterwards run
+# 'systemctl --user daemon-reload'
+# 'systemctl --user enable battery.service'
+# 'systemctl --user start battery.service'
+
+# Check AC adapter status and Battery Voltage
+if [ $(cat /sys/class/power_supply/AC/online) = "0" ] && \
+   [ $(cat /sys/class/power_supply/BAT0/charge_now) \< "505000" ]; then
+        # Display Notification
+        if [ $DISPLAY ]; then dunstify -u critical \
+        -i /home/rene/.icons/status/battery-low.svg \
+        -r 2789 \
+        "Battery Critically Low" "Plug in to AC or Suspend immediately"; fi
+        # Play Alert Sound
+        #for play_beep in {1..4}; do $(aplay /home/b00m/Downloads/beep-08b.wav > /dev/null 2>&1); don
+        paplay /usr/share/sounds/KDE-Sys-App-Error-Serious-Very.ogg
+
+elif [ $(cat /sys/class/power_supply/AC/online) = "1" ] && \
+    [ $(cat /sys/class/power_supply/BAT0/voltage_now) \> "12905000" ]; then
+        # Display Notification
+        if [ $DISPLAY ]; then dunstify -u normal \
+        -i /home/rene/.icons/status/battery-full.svg \
+        -r 2789 \
+        -t 7000 "Battery Almost Full" "Please unplug charger, or remove battery"; fi
+        # Play Alert Sound
+        #for play_beep in {1..4}; do $(aplay /home/b00m/Downloads/beep-08b.wav > /dev/null 2>&1); done
+        paplay /usr/share/sounds/KDE-Sys-Question.ogg > /dev/null 2>&1
+fi

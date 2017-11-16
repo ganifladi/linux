@@ -16,7 +16,7 @@ background = ${xrdb:color0:#FF242a34}
 background-alt = ${xrdb:color0:#FF242a34}
 ;background-alt = 00ffffff
 foreground = ${xrdb:color7:#FFa7adba}
-foreground-alt = #979daa
+foreground-alt = #FF777d8a
 primary = ${xrdb:color4:#FFbf616a}
 secondary = #00aaff
 alert = ${xrdb:color1}
@@ -26,13 +26,13 @@ battery-full = #00ffaa
 
 [bar/top]
 monitor = ${env:MONITOR:eDP1}
-bottom = true
+bottom = false
 width = 100%
-height = 42
+height = 34
 offset-x = 0
 offset-y = 0
+;override-redirect = true
 ;radius = 6.0
-;fixed-center = false
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -45,53 +45,68 @@ underline-color = ${colors.foreground}
 
 ;border-size = 20
 ;border-size = 10
-border-size = 0
-border-bottom-size = 0
+;border-size = 0
+;border-bottom-size = 0
 ;border-color = #00000000
 
-padding-left = 0
-;padding-right = 2
-padding-right = 0
-module-margin-left = 0
-module-margin-right = 2
+padding-left = 2
+padding-right = 6
+module-margin-left = 1
+module-margin-right = 3
 
-font-0 = Monaco:pixelsize=12;2
-font-1 = FontAwesome:size=12;2
+font-0 = San Fransisco:pixelsize=12;3
+;font-1 = FontAwesome:pixelsize=13;4
+font-1 = Material Design Icons:pixelsize=13;3
 
-modules-left = i3
+fixed-center = true
+
+modules-left = bspwm i3
 modules-center = 
-modules-right = volume mpv cmus battery wlan date
+modules-right = mpv cmus volume wlan battery time
+
+tray-position = false
+;tray-detached = false
+;tray-maxsize = 16
+;tray-transparent = false
+;tray-background = ${root.background}
+;tray-offset-x = 0
+;tray-offset-y = 0
+; Pad the sides of each tray icon
+tray-padding = 8
+; Scale factor for tray clients
+;tray-scale = 1.0
 
 [module/xwindow]
 type = internal/xwindow
 label = %title:0:120:...%
-label-padding = 2
+label-padding = 4
 
 [module/bspwm]
 type = internal/bspwm
 
 label-focused = %index%
-label-focused-background = ${colors.foreground-alt}
-label-focused-foreground = ${colors.background-alt}
-label-focused-underline= ${colors.foreground-alt}
-label-focused-padding = 2
+label-focused-background = ${colors.background}
+label-focused-foreground = ${colors.foreground}
+label-focused-underline= ${colors.background}
+label-focused-padding = 4
 
 label-occupied = %index%
-label-occupied-padding = 2
+label-occupied-foreground = ${colors.foreground-alt}
+label-occupied-padding = 4
 
 label-urgent = %index%!
 label-urgent-background = ${colors.background-alt}
 label-urgent-foreground = ${colors.alert}
-label-urgent-padding = 2
+label-urgent-padding = 4
 
 label-empty = %index%
 label-empty-foreground = ${colors.foreground-alt}
-label-empty-padding = 2
+label-empty-padding = 4
 
 [module/i3]
 type = internal/i3
 
-format = <label-state> <label-mode>
+format = <label-state><label-mode>
 index-sort = true
 wrapping-scroll = false
 strip-wsnumbers = true
@@ -99,8 +114,8 @@ strip-wsnumbers = true
 ; Only show workspaces on the same output as the bar
 ;pin-workspaces = true
 
-label-mode-padding = 0
-label-mode-foreground = #000
+label-mode-padding = 2
+label-mode-foreground = ${colors.background}
 label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
@@ -112,6 +127,7 @@ label-focused-padding = ${module/bspwm.label-focused-padding}
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %name%
+label-unfocused-foreground = ${module/bspwm.label-occupied-foreground}
 label-unfocused-padding = ${module/bspwm.label-occupied-padding}
 
 ; visible = Active workspace on unfocused monitor
@@ -125,15 +141,6 @@ label-urgent = %name%
 label-urgent-background = ${module/bspwm.label-urgent-background}
 label-urgent-foreground = ${module/bspwm.label-urgent-foreground}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
-
-ws-icon-0 = 1;
-ws-icon-1 = 2;
-ws-icon-2 = 3;
-ws-icon-3 = 4;
-ws-icon-4 = 5;
-ws-icon-5 = 6;
-ws-icon-6 = 7;
-ws-icon-default = 
 
 [module/mpd]
 type = internal/mpd
@@ -153,60 +160,60 @@ type = internal/network
 interface = wlp3s0
 interval = 3.0
 
-format-connected = <label-connected>
+format-connected = <ramp-signal> <label-connected>
 ;format-connected-underline = #9f78e1
 ;label-connected = %essid%
-label-connected = %local_ip%
+;label-connected = %local_ip%
+label-connected =  %signal%
+label-connected-foreground = ${colors.foreground-alt}
 
 format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
-label-disconnected = no network
-;label-disconnected-foreground = ${colors.foreground-alt}
+label-disconnected = 
+label-disconnected-foreground = ${colors.foreground-alt}
 
-;ramp-signal-0 = 
-;ramp-signal-1 = 
-;ramp-signal-2 = 
-;ramp-signal-3 = 
-;ramp-signal-4 = 
-;ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+#ramp-signal-4 = 
+#ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/date]
 type = internal/date
 interval = 1.0
 
-date = " %a %d %b,"
-date-alt =
+date = "%a %d %b"
+label = %date%
 
-time = "  %H:%M  "
-time-alt = %H:%M
+format-foreground = ${colors.foreground-alt}
 
-;format-prefix = 
-;format-prefix-foreground = ${colors.foreground-alt}
-format-background = ${colors.foreground}
-format-foreground = ${colors.background}
-;format-underline = #0a6cf5
-;format-padding = 2
+[module/time]
+type = internal/date
+interval = 1.0
 
-;label = %date% %time%
 label = %time%
+time = %a %H:%M
+
+;format-background = ${colors.foreground}
+;format-foreground = ${colors.background}
 
 [module/volume]
 type = internal/volume
 
-format-volume = <ramp-volume>
+format-volume = <ramp-volume> <label-volume>
 format-voulme-padding = 0
-label-volume = %percentage%%
-label-volume-foreground = ${root.foreground}
+format-volume-foreground = ${colors.foreground-alt}
+label-volume = %percentage%
 
-;format-muted-prefix = " "
+;format-muted-prefix = " "
 format-muted = <label-muted>
 format-muted-foreground = ${colors.foreground-alt}
-format-muted-padding = 0
 label-muted = "mute"
 
-ramp-volume-0 = 
-ramp-volume-1 = 
-ramp-volume-2 = 
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
 ramp-headphones-0 = 
 ramp-headphones-1 = 
 ramp-headphones-2 = 
@@ -215,43 +222,42 @@ ramp-headphones-2 = 
 type = internal/battery
 battery = BAT0
 adapter = AC
-full-at = 98
+full-at = 97
 poll-interval = 5.0
 
-;format-charging = <animation-charging><label-charging>
-format-charging = <label-charging>
+format-charging = <animation-charging> <label-charging>
 format-charging-padding = 0
-format-charging-prefix = " "
-;format-charging-underline = ${colors.battery-charging}
 
-;format-discharging = <ramp-capacity><label-discharging>
-format-discharging = <label-discharging>
+format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-padding = 0
-;format-discharging-underline = ${colors.battery-discharging}
 
-;format-full = <ramp-capacity><label-full>
 format-full = <label-full>
 format-full-padding = 0
+format-full-foreground = ${colors.battery-full}
 
-format-full-prefix = " "
-format-full-prefix-foreground = ${colors.foreground-alt}
-;format-full-underline = ${colors.battery-full}
+label-charging = %percentage%
+label-discharging = %percentage%
+label-full = 
+label-charging-foreground = ${colors.foreground-alt}
+label-discharging-foreground = ${colors.foreground-alt}
+label-full-foreground = ${colors.foreground-alt}
 
-label-charging = %percentage%%
-label-discharging = %percentage%%
-label-full = %percentage%%
-
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-5 = 
+ramp-capacity-6 = 
+ramp-capacity-7 = 
+ramp-capacity-8 = 
+ramp-capacity-9 = 
 ramp-capacity-foreground = ${colors.foreground-alt}
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
-animation-charging-3 = 
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
 animation-charging-foreground = ${colors.foreground-alt}
 animation-charging-framerate = 750
 
