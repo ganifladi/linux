@@ -22,25 +22,25 @@
 # 'systemctl --user start battery.service'
 
 # Check AC adapter status and Battery Voltage
-if [ $(cat /sys/class/power_supply/AC/online) = "0" ] && \
-   [ $(cat /sys/class/power_supply/BAT0/charge_now) \< "505000" ]; then
+if [ $(cat /sys/class/power_supply/AC/online) -eq "0" ] && \
+   [ $(cat /sys/class/power_supply/BAT0/charge_now) -lt "505000" ]; then
         # Display Notification
-        if [ $DISPLAY ]; then dunstify -u critical \
-        -i ~/.icons/status/battery-low.svg \
-        -r 2789 \
-        "Battery Critically Low" "Plug in to AC or Suspend immediately"; fi
-        # Play Alert Sound
-        #for play_beep in {1..4}; do $(aplay /home/b00m/Downloads/beep-08b.wav > /dev/null 2>&1); don
+        if [ $DISPLAY ]; then
+            dunstify -u critical \
+            -i ~/.icons/status/battery-low.svg \
+            -r 2789 \
+            "Battery Critically Low" "Plug in to AC or Suspend immediately";
+        fi
         paplay /usr/share/sounds/KDE-Sys-App-Error-Serious-Very.ogg
 
-elif [ $(cat /sys/class/power_supply/AC/online) = "1" ] && \
-    [ $(cat /sys/class/power_supply/BAT0/voltage_now) \> "12905000" ]; then
+elif [ $(cat /sys/class/power_supply/AC/online) -eq "1" ] && \
+    [ $(cat /sys/class/power_supply/BAT0/voltage_now) -gt "12905000" ]; then
         # Display Notification
-        if [ $DISPLAY ]; then dunstify -u normal \
-        -i ~/.icons/status/battery-full.svg \
-        -r 2789 \
-        -t 7000 "Battery Almost Full" "Please unplug charger, or remove battery"; fi
-        # Play Alert Sound
-        #for play_beep in {1..4}; do $(aplay /home/b00m/Downloads/beep-08b.wav > /dev/null 2>&1); done
+        if [ $DISPLAY ]; then
+            dunstify -u normal \
+            -i ~/.icons/status/battery-full.svg \
+            -r 2789 \
+            -t 7000 "Battery Almost Full" "Please unplug charger, or remove battery";
+        fi
         paplay /usr/share/sounds/KDE-Sys-Question.ogg > /dev/null 2>&1
 fi
