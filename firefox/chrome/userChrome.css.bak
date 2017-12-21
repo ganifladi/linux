@@ -1,0 +1,54 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+:root:-moz-lwtheme-brighttext {
+  --chrome-background-color: #2d323d !important;
+  --chrome-color: #c0c5ce !important;
+  --chrome-secondary-background-color: #242934 !important;
+  --toolbox-border-bottom-color: #333333 !important;
+  --url-and-searchbar-border-color: #333333 !important;
+  --focus-ring-box-shadow: #191917 !important;
+  --url-and-searchbar-background-color: #2b303b !important;
+}
+
+/* Remove white flash on tab load */
+.browserContainer {
+  background-color: #242934 !important;
+}
+
+/* Address bar focus styles */
+#urlbar[focused="true"], .searchbar-textbox[focused="true"] {
+  border-color: #444444 !important;
+}
+
+/* Remove top border of selected tab */
+:root:-moz-lwtheme {
+  --tab-line-color: none !important;
+}
+
+/* Fixing container tab borders */
+[data-identity-color="blue"] {
+  --identity-tab-color: #7193F7 !important;
+  --identity-icon-color: #7193F7 !important;
+}
+[data-identity-color="green"] {
+  --identity-tab-color: #71F78A !important;
+  --identity-icon-color: #71F78A !important;
+}
+[data-identity-color="orange"] {
+  --identity-tab-color: #F2DE73 !important;
+  --identity-icon-color: #F2DE73 !important;
+}
+[data-identity-color="pink"] {
+  --identity-tab-color: #F771E7 !important;
+  --identity-icon-color: #F771E7 !important;
+}
+
+/* Make normal density theme bit compact */
+:root:not([uidensity=compact]) #back-button {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+:root:not([uidensity=compact]) #back-button > .toolbarbutton-icon {
+  background-color: unset !important;
+  border: none !important;
+}
